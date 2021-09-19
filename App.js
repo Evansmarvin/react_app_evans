@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useRef, useState } from 'react';
 import './App.css';
 //import * as firebase from "firebase/app";
@@ -5,69 +6,22 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 import 'firebase/compat/analytics';
-
-import { useAuthState } from 'react-firebase-hooks/auth';
+// eslint-disable-next-line
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-firebase.initializeApp({
-  // my firebase config
-  apiKey: "AIzaSyDIn28hHX9-Ffot6Pxg81Dhb9hi_mzsGS0",
-  authDomain: "evans29-9747b.firebaseapp.com",
-  projectId: "evans29-9747b",
-  storageBucket: "evans29-9747b.appspot.com",
-  messagingSenderId: "22270317092",
-  appId: "1:22270317092:web:8df0b579bf9ad09098beb1",
-  measurementId: "G-67FX5E97KV"
-})
+import Chat from './components/Chat';
+import SignIn from './components/SignIn';
+import SignOut from './components/SignOut';
+import { auth } from './firebase.js'
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-const auth = firebase.auth();
+//const auth = firebase.auth();
+// eslint-disable-next-line
 const firestore = firebase.firestore();
 // eslint-disable-next-line
 const analytics = firebase.analytics();
-
-
-function App() {
-
-  const [user] = useAuthState(auth);
-
-  return (
-    <div className="App">
-      <header>
-        <h1>⚛️Evans App</h1>
-        <SignOut />
-      </header>
-
-      <section>
-        {user ? <ChatRoom /> : <SignIn />}
-      </section>
-
-    </div>
-  );
-}
-
-function SignIn() {
-
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  }
-
-  return (
-    <>
-      <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
-      <p>Do not violate the community guidelines or you will be banned for life!</p>
-    </>
-  )
-
-}
-
-function SignOut() {
-  return auth.currentUser && (
-    <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
-  )
-}
-
-
+// eslint-disable-next-line
+{/*
 function ChatRoom() {
   const dummy = useRef();
   const messagesRef = firestore.collection('user_messages');
@@ -112,20 +66,21 @@ function ChatRoom() {
     </form>
   </>)
 }
+*/}
 
-
-function ChatMessage(props) {
-  const { text, uid, photoURL } = props.message;
-
-  const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
-
-  return (<>
-    <div className={`message ${messageClass}`}>
-      <img src={photoURL || 'https://photos.google.com/search/_cAF1QipPYO4F2ekPg9nSv8-Y2ituFjjxgY-5F1Vc_Evans%20Marvin/photo/AF1QipO14mKZ9ErJKQ35iGJv_pclfQssTpHB915RBbwc'} alt = "sample"/>
-      <p>{text}</p>
+function App() {
+  const [user] = useAuthState(auth)
+  return (
+    <div className="App">
+    <header>
+      <h1>⚛️Evans App</h1>
+      <SignOut />
+    </header>
+    <section>
+      {user ? <Chat /> : <SignIn />}
+    </section>
     </div>
-  </>)
+  );
 }
-
 
 export default App;
